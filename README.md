@@ -1,4 +1,4 @@
-# 🎛️ Linker32 & PIXER32
+# 🎛️ Linker32 & MIXER32
 
 Un ecosistema completo de hardware y software diseñado para ofrecerte un control físico, táctil y absoluto sobre el mezclador de audio de Windows. 
 
@@ -12,16 +12,18 @@ Compuesto por **Linker32** (una aplicación de escritorio en C# .NET) y **Mixer3
 ## ✨ Características Principales
 
 ### 🖥️ Software (Linker32 - PC)
+
 ![Captura de pantalla de Linker32](IMAGES/Linker32_0.9.3.png)
+
 * **Control por Aplicación:** Extrae dinámicamente las sesiones de audio de Windows (Spotify, Chrome, Discord, Juegos) y te permite controlarlas individualmente.
 * **Auto-Foco Inteligente:** Detecta qué ventana tienes activa y cambia el control del encoder automáticamente a esa aplicación. Monitoriza canales nuevos en tiempo real.
 * **Bypass de Sandbox:** Extracción de iconos de procesos a bajo nivel para una interfaz gráfica rica y moderna.
 * **Modo Invisible:** Funciona en la bandeja del sistema de Windows con opción de auto-arranque silencioso.
 * **Sistema OTA (Over-The-Air) Integrado:** Actualiza el firmware del hardware por Bluetooth directamente desde el PC con un protocolo blindado "Ping-Pong" antipérdidas.
 
-### 🕹️ Hardware (PIXER32)
-![Foto del dispositivo MIXER32](IMAGES/MIXER32_img1.png)
+### 🕹️ Hardware (Mixer32)
 
+![Foto del dispositivo MIXER32](IMAGES/MIXER32_img1.png)
 * **Feedback Visual OLED:** Muestra el nombre de la app, el artista/canción actual, el nivel de volumen, barras de progreso de actualización y estados de conexión.
 * **Temas Visuales:** 3 estilos gráficos intercambiables en caliente (ARC - Arcade, CYB - Cyberpunk, PRO - Broadcast).
 * **Modo ECO:** Gestión inteligente de energía que apaga la pantalla tras un periodo de inactividad.
@@ -31,28 +33,73 @@ Compuesto por **Linker32** (una aplicación de escritorio en C# .NET) y **Mixer3
 
 ## 🛠️ Requisitos de Hardware
 ![Foto del materiales DIY](IMAGES/MaterialesHW.png)
-Para construir tu propio PIXER32 necesitarás:
-* Placa de desarrollo **ESP32** (con Bluetooth clásico activado).
+
+Para construir tu propio MIXER32 necesitarás:
+* Placa de desarrollo **DOIT ESP32 DevKit V1** (con Bluetooth clásico activado).
+* Batería **LiPo de 3.7V (2000 mAh)**.
+* Módulo de carga de litio **TP4056** (con protección de sobredescarga).
+* Interruptor deslizante **SS12F15VG4** (SPDT).
 * Pantalla **OLED SSD1306** (I2C).
-* Encoder rotativo **KY-040**(con pulsador integrado).
-* 3 Interruptores de teclado Cherry mecanicas (para funciones multimedia/macros).
-* 2 Resistencias de 100k
+* Encoder rotativo **KY-040** (con pulsador integrado).
+* 3 **Interruptores de teclado Cherry MX** mecánicos.
+* 2 **Resistencias de 100kΩ** (para el divisor de tensión del lector de batería).
+* 4 tornillos **M3x10 Allen**.
+* 8 tornillos **M2x8 Phillips**.
+
+---
+
+### 🔌 Esquema de Conexiones (Wiring)
+![Esquema de conexiones](IMAGES/esquemaElectrico.png)
+
+Realiza las siguientes conexiones físicas utilizando la serigrafía grabada en tu placa DOIT V1:
+
+**1. Sistema de Alimentación Principal**
+* **Batería LiPo:** Cable rojo (Positivo) al pad **`B+`** del TP4056; cable negro (Negativo) al pad **`B-`**.
+* **Tierra General:** Pad **`OUT-`** del TP4056 conectado directamente a un pin **`GND`** del ESP32.
+* **Interruptor Deslizante:** Pad **`OUT+`** del TP4056 al pin **central** del interruptor. Uno de los pines **laterales** del interruptor va directo al pin **`VIN`** (o `5V`) del ESP32.
+
+**2. Pantalla OLED SSD1306 (Bus I2C)**
+* **VCC:** Pin `3V3` del ESP32
+* **GND:** Pin `GND`
+* **SDA:** Pin `D21`
+* **SCL:** Pin `D22`
+
+**3. Encoder Rotativo (KY-040)**
+* **VCC:** Pin `3V3` del ESP32
+* **GND:** Pin `GND`
+* **CLK (Pin A):** Pin `D32`
+* **DT (Pin B):** Pin `D33`
+* **SW (Pulsador):** Pin `D27` *(Configurado con PULLUP interno, se activa en LOW)*
+
+**4. Botonera Multimedia (Interruptores Cherry MX)**
+*Un pin de cada interruptor se suelda al GPIO correspondiente y el otro contacto va común a la línea `GND` general.*
+* **Botón 1 (Mute / Desmutear Todo):** Pin `D25`
+* **Botón 2 (Canal Siguiente / Multimedia Next):** Pin `D26`
+* **Botón 3 (Canal Anterior / Multimedia Prev):** Pin `D14`
+
+**5. Lector de Nivel de Batería**
+* Conecta las dos resistencias de 100kΩ en serie entre la salida del interruptor (que lleva el voltaje de la batería) y la línea `GND`. El punto de unión central entre ambas resistencias se conecta directamente al pin **`D34`** para monitorizar el porcentaje.
+
+---
 
 ## 🚀 Instalación y Uso
 
 ### 1. El Hardware (Arduino IDE)
 1. Abre el archivo `.ino` incluido en el IDE de Arduino.
-2. Instala las librerías necesarias (Adafruit SSD1306, BluetoothSerial, etc.).
-3. Flashea tu placa ESP32 por cable USB (solo es necesario la primera vez, las siguientes actualizaciones se pueden hacer de forma inalámbrica vía OTA desde el programa de PC).
+2. Abre el Gestor de Bibliotecas (`Ctrl + Shift + I`) e instala las siguientes dependencias:
+   * **Adafruit SSD1306**
+   * **Adafruit GFX Library**
+3. Conecta tu placa ESP32 por cable USB seleccionando la tarjeta **DOIT ESP32 DEVKIT V1**.
+4. Flashea el código básico *(este paso por cable solo es necesario la primera vez)*.
 
 ### 2. El Software (Windows)
-1. Descarga la última *Release* desde la pestaña de "Releases" de GitHub.
+1. Descarga la última versión desde la pestaña de **Releases** de GitHub.
 2. Ejecuta `Linker32.exe`.
-3. Empareja tu ESP32 con Windows a través de la configuración de Bluetooth del sistema.
-4. El programa detectará el puerto COM automáticamente, se sincronizará con la placa y comenzará a enviar los datos de audio.
+3. Vincula el dispositivo Bluetooth llamado `Mixer32_BT` en la configuración de Windows.
+4. La aplicación de escritorio detectará el puerto COM de forma automática, sincronizará los canales y podrás empezar a operar.
 
 ## 📡 Protocolo OTA Seguro
-Linker32 incluye un flasheador inalámbrico customizado. Si detecta que la versión de hardware es antigua, ofrecerá actualizar la placa. Utiliza un algoritmo de *chunking* de 512 bytes con comprobación de integridad (Magic Byte) y un *handshake* estricto para asegurar que la placa nunca se *brickee* durante la actualización.
+Linker32 incluye un sistema de flasheo inalámbrico integrado de nivel industrial. Si el software detecta que el hardware tiene un firmware desactualizado, te ofrecerá actualizarlo por Bluetooth de forma transparente. Utiliza una arquitectura estricta de transferencia por bloques de 512 bytes sincronizados por `ACK` junto con un chequeo de integridad local de firma de arranque (`Magic Byte 0xE9`), lo que hace que el proceso sea completamente inmune a fallos de conexión o pérdidas de datos.
 
 ## 👨‍💻 Autor
 Creado y desarrollado por **Rober Ben**.
