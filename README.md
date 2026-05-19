@@ -17,7 +17,7 @@ Compuesto por **Linker32** (una aplicación de escritorio en C# .NET) y **MIXER3
 * **Auto-Foco Inteligente:** Detecta qué ventana tienes activa y cambia el control del encoder automáticamente a esa aplicación. Monitoriza canales nuevos en tiempo real.
 * **Bypass de Sandbox:** Extracción de iconos de procesos a bajo nivel para una interfaz gráfica rica y moderna.
 * **Modo Invisible:** Funciona en la bandeja del sistema de Windows con opción de auto-arranque silencioso.
-* **Sistema OTA (Over-The-Air) Integrado:** Actualiza el firmware del hardware por Bluetooth directamente desde el PC con un protocolo blindado "Ping-Pong" antipérdidas.
+* **Sistema OTA (Over-The-Air) Integrado:** Actualiza el firmware del hardware por Bluetooth o cable directamente desde el PC con un protocolo blindado "Ping-Pong" antipérdidas.
 
 ### 🕹️ Hardware (MIXER32)
 ![Foto del dispositivo MIXER32](IMAGES/MIXER32_img1.png)
@@ -90,34 +90,33 @@ Realiza las siguientes conexiones físicas utilizando la serigrafía grabada en 
 **5. Lector de Nivel de Batería (Monitor de porcentaje)**
 * Para medir la carga sin descargar la batería de forma pasiva cuando el interruptor está apagado, el divisor de tensión se conecta **después** del interruptor deslizante (en la línea que va hacia el pin `VIN` del ESP32).
 * Coloca las dos resistencias de 100kΩ en serie conectando un extremo a la línea `VIN` (salida del interruptor) y el otro extremo a la línea `GND`. El punto de unión central entre ambas resistencias se conecta directamente al pin **`D34`**.
-* 
+
 **6. Sensor de Estado de Carga (Animación de batería)**
-  
 * Para que la pantalla OLED muestre la animación de carga activa, el ESP32 debe detectar cuándo el cargador está trabajando mediante un "cable espía" que monitoriza el estado del chip TP4056.
-
 * Cable Espía: Un extremo se suelda directamente a la patilla número 7 del chip integrado TP4056 (el integrado negro de 8 patas). El otro extremo va conectado al pin D13 del ESP32.
-
 * Funcionamiento: Esta patilla baja a 0.0V (LOW) únicamente cuando el proceso de carga está activo (LED rojo encendido). El firmware detecta este estado y activa automáticamente el motor de animación de la pila en el OLED.
+
 ---
 
 ## 🚀 Instalación y Uso
 
-### 1. El Hardware (Arduino IDE)
-1. Abre el [archivo .ino](https://github.com/roberben/Linker32/blob/master/ARDUINO/Mixer32.ino). en el IDE de Arduino.
-2. Abre el Gestor de Bibliotecas (`Ctrl + Shift + I`) e instala las siguientes dependencias:
-   * **Adafruit SSD1306**
-   * **Adafruit GFX Library**
-3. Conecta tu placa ESP32 por cable USB seleccionando la tarjeta **DOIT ESP32 DEVKIT V1**.
-4. Flashea el código básico *(este paso por cable solo es necesario la primera vez)*.
+### 1. El Hardware (VS Code + PlatformIO)
+El proyecto ha sido migrado a **PlatformIO** para una mejor gestión de dependencias y modularidad.
+
+1. Instala [Visual Studio Code](https://code.visualstudio.com/) y la extensión de **PlatformIO**.
+2. Clona este repositorio y abre la carpeta raíz en VS Code. PlatformIO detectará automáticamente el archivo `platformio.ini`.
+3. PlatformIO se encargará de descargar las bibliotecas necesarias (como `Adafruit SSD1306` y `Adafruit GFX Library`).
+4. Conecta tu placa ESP32 (DOIT ESP32 DEVKIT V1) por cable USB.
+5. Haz clic en el botón de **Upload** (la flecha hacia la derecha en la barra inferior de PlatformIO) para compilar y flashear el código básico *(este paso por cable solo es necesario la primera vez)*.
 
 ### 2. El Software (Windows)
 1. Descarga la última versión desde la pestaña de **Releases** de GitHub.
 2. Ejecuta `Linker32.exe`.
-3. Vincula el dispositivo Bluetooth llamado `Mixer32_BT` en la configuración de Windows.
+3. Vincula el dispositivo Bluetooth llamado `Mixer32_BT` en la configuración de Windows (o usa el cable USB).
 4. La aplicación de escritorio detectará el puerto COM de forma automática, sincronizará los canales y podrás empezar a operar.
 
 ## 📡 Protocolo OTA Seguro
-Linker32 incluye un sistema de flasheo inalámbrico integrado de nivel industrial. Si el software detecta que el hardware tiene un firmware desactualizado, te ofrecerá actualizarlo por Bluetooth de forma transparente. Utiliza una arquitectura estricta de transferencia por bloques de 512 bytes sincronizados por `ACK` junto con un chequeo de integridad local de firma de arranque (`Magic Byte 0xE9`), lo que hace que el proceso sea completamente inmune a fallos de conexión o pérdidas de datos.
+Linker32 incluye un sistema de flasheo integrado (inalámbrico por Bluetooth o por cable USB) de nivel industrial. Si el software detecta que el hardware tiene un firmware desactualizado, te ofrecerá actualizarlo de forma transparente. Utiliza una arquitectura estricta de transferencia por bloques de 512 bytes sincronizados por `ACK` junto con un chequeo de integridad local de firma de arranque (`Magic Byte 0xE9`), lo que hace que el proceso sea completamente inmune a fallos de conexión o pérdidas de datos.
 
 ## 👨‍💻 Autor
 Creado y desarrollado por **Rober Ben**.
