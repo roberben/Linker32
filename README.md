@@ -100,15 +100,22 @@ Realiza las siguientes conexiones físicas utilizando la serigrafía grabada en 
 
 ## 🚀 Instalación y Uso
 
-### 1. El Hardware (VS Code + PlatformIO)
-El proyecto ha sido migrado a **PlatformIO** para una mejor gestión de dependencias y modularidad.
+### 1. El Hardware (Flasheo del ESP32)
 
-1. Instala [Visual Studio Code](https://code.visualstudio.com/) y la extensión de **PlatformIO**.
-2. Para compilar el proyecto a partir de esta versión, es necesario utilizar PlatformIO. El entorno de Arduino IDE ya no está oficialmente soportado debido a la complejidad de la gestión del entorno y librerías.
-Asegúrate de revisar la [carpeta PlatformIO](https://github.com/roberben/Linker32/tree/master/PlatformIO)
-3. PlatformIO se encargará de descargar las bibliotecas necesarias (como `Adafruit SSD1306` y `Adafruit GFX Library`).
-4. Conecta tu placa ESP32 (DOIT ESP32 DEVKIT V1) por cable USB.
-5. Haz clic en el botón de **Upload** (la flecha hacia la derecha en la barra inferior de PlatformIO) para compilar y flashear el código básico *(este paso por cable solo es necesario la primera vez)*.
+Tienes dos opciones para instalar el firmware en tu placa ESP32:
+
+**Opción A: Instalación Fácil (Recomendada) 🌐**
+Puedes instalar el firmware directamente desde el navegador de tu ordenador, sin necesidad de descargar código ni instalar entornos de desarrollo.
+1. Conecta tu ESP32 por USB al ordenador.
+2. Entra al **[Instalador Web de MIXER32](https://roberben.github.io/Linker32/)** *(requiere Google Chrome o Microsoft Edge).*
+3. Haz clic en **Connect**, selecciona el puerto COM de tu placa y dale a instalar. 
+
+**Opción B: Compilación Manual (Para Desarrolladores) 🛠️**
+Si deseas modificar el código fuente:
+1. Instala [Visual Studio Code](https://code.visualstudio.com/) y la extensión de **PlatformIO**. *(Arduino IDE ya no está soportado).*
+2. Clona este repositorio y ábrelo con PlatformIO. Éste se encargará de descargar las dependencias.
+3. Conecta tu placa ESP32 por cable USB.
+4. Usa el botón de **Upload** de PlatformIO para compilar y flashear.
 
 ### 2. El Software (Windows)
 1. Descarga la última versión desde la pestaña de **Releases** de GitHub.
