@@ -14,17 +14,20 @@ Compuesto por **Linker32** (una aplicación de escritorio en C# .NET) y **MIXER3
 ### 🖥️ Software (Linker32 - PC)
 ![Captura de pantalla de Linker32](IMAGES/Linker32_0.9.3.png)
 * **Control por Aplicación:** Extrae dinámicamente las sesiones de audio de Windows (Spotify, Chrome, Discord, Juegos) y te permite controlarlas individualmente.
-* **Auto-Foco Inteligente:** Detecta qué ventana tienes activa y cambia el control del encoder automáticamente a esa aplicación. Monitoriza canales nuevos en tiempo real.
+* **Auto-Ducking Inteligente:** Atenúa automáticamente el volumen de las aplicaciones secundarias (modo esclavo) cuando una principal (modo fuente) supera un umbral de sonido. Por diseño estricto de la arquitectura, el canal Master simplemente no interactúa de ninguna manera con este sistema de *ducking*.
+* **Auto-Foco de Ventana:** Detecta qué ventana tienes activa en primer plano y cambia el control del hardware automáticamente a esa aplicación. Monitoriza canales nuevos en tiempo real.
 * **Bypass de Sandbox:** Extracción de iconos de procesos a bajo nivel para una interfaz gráfica rica y moderna.
-* **Modo Invisible:** Funciona en la bandeja del sistema de Windows con opción de auto-arranque silencioso.
-* **Sistema OTA (Over-The-Air) Integrado:** Actualiza el firmware del hardware por Bluetooth o cable directamente desde el PC con un protocolo blindado "Ping-Pong" antipérdidas.
+* **Modo Invisible:** Funciona en la bandeja del sistema de Windows con opción de auto-arranque silencioso configurado directamente en el registro.
+* **Sistema OTA (Over-The-Air) Integrado:** Actualiza el firmware del hardware por Bluetooth o cable directamente desde el PC con un protocolo blindado "Ping-Pong" antipérdidas y validación de *Magic Byte*.
+* **Web Configurator:** Herramienta oficial alojada en GitHub Pages para configurar y personalizar los parámetros de tu dispositivo cómodamente desde el navegador.
 
 ### 🕹️ Hardware (MIXER32)
 ![Foto del dispositivo MIXER32](IMAGES/MIXER32_img1.png)
-* **Feedback Visual OLED:** Muestra el nombre de la app, el artista/canción actual, el nivel de volumen, barras de progreso de actualización y estados de conexión.
+* **Feedback Visual OLED:** Muestra el nombre de la app, el artista/canción actual interceptada del motor multimedia, el nivel de volumen, barras de progreso de actualización y estados de conexión.
 * **Temas Visuales:** 3 estilos gráficos intercambiables en caliente (ARC - Arcade, CYB - Cyberpunk, PRO - Broadcast).
+* **Control Táctico Central:** El encoder rotativo cuenta con lógica dual. La pulsación corta actúa como MUTE del canal actual, mientras que la pulsación larga activa el Modo SOLO (aislando instantáneamente el audio de esa aplicación).
 * **Modo ECO:** Gestión inteligente de energía que apaga la pantalla tras un periodo de inactividad.
-* **Botones Multimedia y Tácticos:** Soporte para atajos de Play/Pause, Next, Prev, Mute Maestro y Modo SOLO (aislar el audio de una sola aplicación).
+* **Botonera Multimedia:** Soporte para atajos físicos dedicados de Play/Pause, Next y Prev.
   
 ![Foto del dispositivo MIXER32](IMAGES/MIXER32_img2.png)
 
@@ -83,9 +86,9 @@ Realiza las siguientes conexiones físicas utilizando la serigrafía grabada en 
 
 **4. Botonera Multimedia (Interruptores Cherry MX)**
 *Un pin de cada interruptor se suelda al GPIO correspondiente y el otro contacto va común a la línea `GND` general.*
-* **Botón 1 (Mute / Desmutear Todo):** Pin `D25`
-* **Botón 2 (Canal Siguiente / Multimedia Next):** Pin `D26`
-* **Botón 3 (Canal Anterior / Multimedia Prev):** Pin `D14`
+* **Botón 1 (Mute Maestro / Desmutear Todo):** Pin `D25`
+* **Botón 2 (Multimedia Next):** Pin `D26`
+* **Botón 3 (Multimedia Prev):** Pin `D14`
 
 **5. Lector de Nivel de Batería (Monitor de porcentaje)**
 * Para medir la carga sin descargar la batería de forma pasiva cuando el interruptor está apagado, el divisor de tensión se conecta **después** del interruptor deslizante (en la línea que va hacia el pin `VIN` del ESP32).
@@ -101,7 +104,7 @@ Realiza las siguientes conexiones físicas utilizando la serigrafía grabada en 
 ## 🚀 Instalación y Uso
 
 ### 1. El Hardware (VS Code + PlatformIO)
-El proyecto ha sido migrado a **PlatformIO** para una mejor gestión de dependencias y modularidad.
+El proyecto ha sido migrado a **PlatformIO** para una mejor gestión de dependencias y modularidad, ideal para compilar utilizando asistentes de IA.
 
 1. Instala [Visual Studio Code](https://code.visualstudio.com/) y la extensión de **PlatformIO**.
 2. Clona este repositorio y abre la carpeta raíz en VS Code. PlatformIO detectará automáticamente el archivo `platformio.ini`.
@@ -110,10 +113,15 @@ El proyecto ha sido migrado a **PlatformIO** para una mejor gestión de dependen
 5. Haz clic en el botón de **Upload** (la flecha hacia la derecha en la barra inferior de PlatformIO) para compilar y flashear el código básico *(este paso por cable solo es necesario la primera vez)*.
 
 ### 2. El Software (Windows)
-1. Descarga la última versión desde la pestaña de **Releases** de GitHub.
+1. Descarga la última versión (v0.9.6+) desde la pestaña de **Releases** de GitHub.
 2. Ejecuta `Linker32.exe`.
 3. Vincula el dispositivo Bluetooth llamado `Mixer32_BT` en la configuración de Windows (o usa el cable USB).
 4. La aplicación de escritorio detectará el puerto COM de forma automática, sincronizará los canales y podrás empezar a operar.
+
+### 3. Configuración Web (Mixer32 Configurator)
+Una vez tengas el ecosistema funcionando, puedes personalizar los parámetros internos de tu dispositivo de forma visual y rápida desde el navegador, sin necesidad de tocar código.
+
+👉 **[Acceder a Mixer32 Web Configurator](https://roberben.github.io/Mixer32/)**
 
 ## 📡 Protocolo OTA Seguro
 Linker32 incluye un sistema de flasheo integrado (inalámbrico por Bluetooth o por cable USB) de nivel industrial. Si el software detecta que el hardware tiene un firmware desactualizado, te ofrecerá actualizarlo de forma transparente. Utiliza una arquitectura estricta de transferencia por bloques de 512 bytes sincronizados por `ACK` junto con un chequeo de integridad local de firma de arranque (`Magic Byte 0xE9`), lo que hace que el proceso sea completamente inmune a fallos de conexión o pérdidas de datos.
