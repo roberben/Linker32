@@ -5,20 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instalador Web - MIXER32 Pro</title>
     <style>
-        /* --- VARIABLES CSS (PALETA MODO OSCURO) --- */
+        /* --- VARIABLES CSS (PALETA MODO OSCURO + TRANSPARENCIAS) --- */
         :root {
             --bg-color: #1a1a1a; /* Fondo gris oscuro de base */
-            --container-bg: rgba(30, 30, 35, 0.85); /* Contenedor oscuro semi-transparente */
+            
+            /* --- AJUSTE: Contenedor principal mucho más transparente --- */
+            --container-bg: rgba(25, 25, 30, 0.4); /* Opacidad al 40% */
+            
             --main-text: #f0f4f8; /* Texto principal claro */
             --secondary-text: #a0aec0; /* Texto secundario gris claro */
-            --accent-color: #4facfe; /* Un azul brillante que resalta en fondo oscuro */
-            --border-color: rgba(255, 255, 255, 0.1); /* Bordes sutiles */
+            --accent-color: #4facfe; /* Azul brillante */
+            --border-color: rgba(255, 255, 255, 0.08); /* Bordes casi invisibles */
             
-            /* Colores para la nota de advertencia en modo oscuro */
-            --note-bg: rgba(255, 193, 7, 0.1); 
-            --note-text: #ffd54f; 
+            /* --- AJUSTE: Notas de advertencia semitransparentes --- */
+            --note-bg: rgba(255, 193, 7, 0.15); /* Fondo amarillo muy sutil */
+            --note-text: #ffd54f; /* Texto amarillo */
             
-            --shadow: 0 15px 35px rgba(0,0,0,0.5); /* Sombra más pronunciada */
+            --shadow: 0 15px 35px rgba(0,0,0,0.6); /* Sombra pronunciada para dar relieve */
             --padding-main: 50px;
             --padding-container: 40px;
         }
@@ -32,29 +35,29 @@
             color: var(--main-text);
             line-height: 1.6;
             
-            /* Aplicación del fondo gris oscuro y la imagen de GitHub */
+            /* Fondo gris oscuro y la imagen de GitHub */
             background-color: var(--bg-color);
             background-image: 
-                linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.8)), /* Capa oscura para mejorar legibilidad */
+                linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.8)), /* Capa oscura para contraste */
                 url('https://raw.githubusercontent.com/roberben/Mixer32/04a106efc33861062dfe756a08434d99493306ef/IMAGES/MIXER32_img1.png');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* La imagen se queda fija si haces scroll */
+            background-attachment: fixed; /* Imagen fija al hacer scroll */
         }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
+        /* --- CONTENEDOR PRINCIPAL (CUADRO GRANDE ENG LOBADOR) --- */
         .container {
             max-width: 650px;
             margin: 0 auto;
             padding: var(--padding-container);
-            background-color: var(--container-bg);
+            background-color: var(--container-bg); /* Semitransparente (40%) */
             border: 1px solid var(--border-color);
             border-radius: 16px;
             box-shadow: var(--shadow);
             
-            /* Efecto cristal (hace que el fondo se vea borroso a través del contenedor) */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            /* Efecto cristal esmerilado */
+            backdrop-filter: blur(15px); /* Desenfoque ligeramente mayor */
+            -webkit-backdrop-filter: blur(15px);
             
             overflow: hidden;
         }
@@ -74,7 +77,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Da relieve al título */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         h1::before {
@@ -88,9 +91,10 @@
             margin-bottom: 1.5em;
         }
 
-        /* --- SECCIÓN DE INSTALACIÓN --- */
+        /* --- CUADRO INTERIOR DE TEXTO E INSTALACIÓN (Semitransparente) --- */
         .install-section {
-            background-color: rgba(0, 0, 0, 0.3); /* Un poco más oscuro que el contenedor */
+            /* --- AJUSTE: Fondo más transparente que antes --- */
+            background-color: rgba(10, 10, 15, 0.45); /* Opacidad al 45% */
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 30px;
@@ -103,15 +107,18 @@
             display: inline-block;
         }
 
-        /* --- NOTA DE PIE DE PÁGINA / ADVERTENCIA --- */
+        /* --- CUADRO INTERIOR DE NOTA (Semitransparente) --- */
         .footer-note {
             margin-top: 30px;
             font-size: 0.9em;
-            background-color: var(--note-bg);
+            background-color: var(--note-bg); /* Semitransparente (15% amarillo) */
             color: var(--note-text);
             padding: 15px 20px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 193, 7, 0.3);
+            
+            /* Ajuste sutil de borde para integrarlo */
+            border: 1px solid rgba(255, 193, 7, 0.1); 
+            
             text-align: left;
             display: flex;
             align-items: flex-start;
@@ -144,9 +151,9 @@
         <p>Prepara tu MIXER32 para la acción. Sigue estos sencillos pasos:</p>
         
         <div class="install-section">
-            <p style="color: #fff;">1. Conecta tu dispositivo al ordenador con un cable USB compatible.</p>
-            <p style="color: #fff;">2. Asegúrate de tener el navegador Chrome o Edge abierto en escritorio.</p>
-            <p style="color: #fff;">3. Haz clic en "Connect", selecciona el puerto UART y confirma la instalación.</p>
+            <p style="color: #fff; font-weight: 500;">1. Conecta tu dispositivo al ordenador con un cable USB compatible.</p>
+            <p style="color: #fff; font-weight: 500;">2. Asegúrate de tener el navegador Chrome o Edge abierto en escritorio.</p>
+            <p style="color: #fff; font-weight: 500;">3. Haz clic en "Connect", selecciona el puerto UART y confirma la instalación.</p>
             
             <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
             
@@ -163,3 +170,4 @@
         </div>
     </div>
 </body>
+</html>
